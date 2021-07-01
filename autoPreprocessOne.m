@@ -4,18 +4,15 @@ inputpath = fullfile( inputDir, subDir );
 % 1数据导入
 % [filename, pathname] = uigetfile({'*.bdf;*.edf;*.*'}, 'Pick a recorded EEG data file','MultiSelect', 'on');
 filename = {'data.bdf','evt.bdf'};
-% inputpath = 'C:\Users\10748\Desktop\2';
 EEG = pop_importNeuracle(filename, inputpath);
 EEG.etc.eeglabvers = '2021.0'; % this tracks which version of EEGLAB is being used, you may ignore it
 EEG.setname='s1';
 EEG = eeg_checkset( EEG );
-eventsNum = size(EEG.event,2);
-if( ~isequal( eventsNum, 5 ))
-    return;
-end
+% 保存events
+EEG.events = [EEG.event.type];
 % 2导联定位
 % use BESA file for 4-shell dipfit spherical model
-EEG=pop_chanedit(EEG, 'lookup','D:\\puresox\\code\\MATLAB\\eeglab\\plugins\\dipfit\\standard_BESA\\standard-10-5-cap385.elp');
+EEG=pop_chanedit(EEG, 'lookup','D:\\puresox\\code\\MATLAB\\eeglab\\plugins\\dipfit4.0\\standard_BESA\\standard-10-5-cap385.elp');
 EEG.setname='s2';
 EEG = eeg_checkset( EEG );
 % 3删除无用数据
@@ -36,15 +33,15 @@ EEG = pop_reref( EEG, []);
 EEG.setname='s5';
 EEG = eeg_checkset( EEG );
 % 6降低采样率
-EEG = pop_resample( EEG, 1000);
-EEG.setname='s6';
-EEG = eeg_checkset( EEG );
+% EEG = pop_resample( EEG, 1000);
+% EEG.setname='s6';
+% EEG = eeg_checkset( EEG );
 % 7插值坏导
 % EEG = pop_interp(EEG, [59], 'spherical');
 % 8独立主成分分析
 
 % 9分段
-EEG = pop_epoch( EEG, {  '1'  '2'  '3'  '4'  '5'  }, [0.14  2.14], 'newname', 's9', 'epochinfo', 'yes');
+EEG = pop_epoch( EEG, {  '1'  '2'  '3'  '4'  }, [0.14  2.14], 'newname', 's9', 'epochinfo', 'yes');
 EEG = eeg_checkset( EEG );
 % 10基线校正
 EEG = pop_rmbase( EEG, [],[]);

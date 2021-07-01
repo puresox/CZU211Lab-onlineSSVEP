@@ -2,8 +2,8 @@ clear;
 clc;
 
 eeglab nogui;
-inputDir = './dataset/SSVEP/raw';
-outputDir = './dataset/SSVEP/preprocessed';
+inputDir = './dataset/SSVEP1/raw';
+outputDir = './dataset/SSVEP1/preprocessed';
 subdir  = dir( inputDir );
 
 for i = 1 : length( subdir )
