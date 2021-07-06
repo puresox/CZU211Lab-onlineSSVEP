@@ -43,6 +43,20 @@ EEG = eeg_checkset( EEG );
 % 9分段
 EEG = pop_epoch( EEG, {  '1'  '2'  '3'  '4'  }, [0.14  2.14], 'newname', 's9', 'epochinfo', 'yes');
 EEG = eeg_checkset( EEG );
+% 小波
+n=4;
+for i=1:40
+    for j=1:8
+        wdata=EEG.data(j,:,i);
+        m_wav='db5';
+        [c,l]=wavedec(wdata,n,m_wav);
+        
+        % 时域波形
+        % 重构1~4层逼近信号
+        a4=wrcoef('a',c,l,'db5',n);
+        EEG.data(j,:,i)=a4;
+    end
+end
 % 10基线校正
 EEG = pop_rmbase( EEG, [],[]);
 EEG.setname='s10';
